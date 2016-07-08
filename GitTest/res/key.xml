@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<security>
+	<item name="wxPay_appId" value="wxd0d84bbf23b4a0e4"/>
+	<item name="wxPay_mchId" value="1234567890"/>
+	<item name="wxPay_partnerKey" value="***"/>
+	<item name="wxPay_notifyUrl" value="***"/>
+</security>
+<security>
+	<item name="aliPay_partner" value="2088802770059217"/>
+	<item name="aliPay_seller" value="18215552696"/>
+	<item name="aliPay_rsaPriKey" value="MIICXQIBAAKBgQCijY2ZylJrPe1qoHCKu8z1pDDxzRCkjaoYnjJEAl8UqdEFXCac
+t5+jxiy3YCy2Vt2tZUaguoqd1cpkJ/snKotSQ+U+Ltvd7a1cAL69oLvNaxonQ5cx
+aggYn8XPldpFMARyFSLrLxZwvL2W/1vmvN08L7zh1U2FcPYGU3gJy6SgpQIDAQAB
+AoGACQnN4cs6IfRjixY4q74de1sRzaAVWND3sD67lMR8/O0kTiP9kaE0IysVuWyD
+j+/si4OiFbXJl1UX19HRSTA4ZtfnqSI3eKMJ2BhMo4WAEUClb19JlD+ZAiPd9vzU
+Njb3qlXTE0tyo1pMlf+9ACSMLrpP2ME7LMamtUp0I1xrdoECQQDOqkGCbrO3twfy
+G3drq8qFAhKGT5Udk4gnEdt80LVhbIAX2wdlXT/ze1VD1JngeFnNXFAh9h3oqSGA
+pghQpyEpAkEAyVuC3UeXEPnC586P9m0c+4sDRBj+2bcKpjgbzhBfh+2Pz/BqxscL
+WJQCe4dPAA86KkaAM8SThc65d2RI0VfHHQJAO6mbT/R1ncwRVyvmxgbKaKu4fV3s
+RqWY4O6e1uHJ+14/fKOW9wR8ueYZL4PpCIy2IDtORv+uksSBD4rfS6l0QQJBAKRy
+zIoUMdh3YysWlJTZwFXfzqcLEviUeWoPYQYGcT7+UfmtjEcTwLxzBSQF+gs+ZG6q
+bYHaBfG+R9KuYJo4ajECQQCu5689epMwQduDPlQJIPbUwu332CW/YSYB6xYn7nej
+6OOTLozbkwV07h1pVFFM/7VUkAUIvPgQgKZAhLWJUjkk"/>
+	<item name="aliPay_rsaPubKey" value="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCijY2ZylJrPe1qoHCKu8z1pDDxzRCkjaoYnjJEAl8UqdEFXCact5+jxiy3YCy2Vt2tZUaguoqd1cpkJ/snKotSQ+U+Ltvd7a1cAL69oLvNaxonQ5cxaggYn8XPldpFMARyFSLrLxZwvL2W/1vmvN08L7zh1U2FcPYGU3gJy6SgpQIDAQAB"/>
+	<item name="aliPay_notifyURL" value="http://www.apicloud.com"/>
+</security>

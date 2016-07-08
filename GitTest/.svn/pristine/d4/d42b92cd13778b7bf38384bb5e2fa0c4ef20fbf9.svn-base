@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<security>
+	<item name="wxPay_appId" value="wx033f6adbf18881b1"/>
+    <item name="wxPay_mchId" value="1234567890"/>
+    <item name="wxPay_partnerKey" value="***"/>
+    <item name="wxPay_notifyUrl" value="***"/>
+    <item name="其它服务需加密的参数配置 " value="***"/>
+</security>

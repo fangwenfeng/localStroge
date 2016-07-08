@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>云API</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <style>
+        .empty{ text-align: center; padding: 15px; }
+        #con{
+			margin:10px;
+			font-size: 28px; 
+		}
+		ul{
+			margin-bottom:10px;
+		}
+		.txt{ 
+			margin:5px 10px;
+			padding:5px;
+			color:#000;
+			word-wrap: break-word;
+		}
+		input[type="text"]{
+			border-radius: 6px;
+		    background-color: #FFFFFF;
+		    height: 36px;
+		    border: 1px solid #D2CCCE;
+		    color: #D2CCCE;
+		    line-height: 36px;
+		    text-indent: 7px;
+		    width:120px;
+		    background-clip:padding-box;
+		}
+		input[type="button"],#con{
+			border-radius: 6px;
+		    background-color: #81A9C3;
+		    height: 36px;
+		    border: 1px solid #D2CCCE;
+		    color: #FFFFFF;
+		    line-height: 36px;
+		    padding-left:30px;
+		    padding-right:30px;
+		    background-clip:padding-box;
+		}
+		span {
+            padding: 5px 15px;
+            margin: 10px;
+            display: inline-block;
+            background-color: #e8e8e8;
+        }
+    </style>
+</head>
+<body>
+	<input type="button" onclick="openScanner()" value="开启二维码扫描"/><br><br>
+    <input type="button" onclick="smsVerifyLogin()" value="sendsms注册短信模块" /><br><br>
+	手机号<input type="text" id="tel" name="tel" value="" placeholder="输入手机号" /><br><br>
+    <input type="button" class="smsVerify_btn" onclick="smsVerifySend()" value="发送短信验证" />
+    <input type="button" class="voiceVerify_btn" onclick="smsVerifyVoiceSend()" value="发送语音验证" /><br><br>
+	验证码<input type="text" id="code" name="code" value="" />
+    <input type="button" onclick="smsVerifyVerify()" value="验证码验证" /><br><br><br>
+
+    <span tapmode onclick="speechRecognizerRecord();">录音</span>
+    <span tapmode onclick="speechRecognizerCancelRecord();">停止录音</span>
+    <span tapmode onclick="speechRead();">读取文字</span>
+    <span tapmode onclick="speechReadStop();">停止朗读</span>
+</body>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js "></script>
+<script>
+	var smsVerify;
+	var timer1 = "";
+	var maxtime = 60;
+
+	var speechRecognizer ;
+	var readWord;
+	apiready = function(){
+	    smsVerify = api.require('smsVerify');
+	    speechRecognizer = api.require('speechRecognizer');
+	}
+	function speechRecognizerRecord(){
+		speechRecognizer.addRecordHUD({
+	        centerX: 160,
+	        centerY: 120,
+	        radius: 40,
+	        transparentR:40,
+	        bg: '#AAAAAA',
+	        fixedOn: api.frameName,
+	        fixed: false
+	    },function(ret,err){
+	        var volume = ret.volume;
+	        speechRecognizer.showRecordHUD();
+	    });
+		speechRecognizer.record({
+			vadbos:5000,
+			vadeos:5000,
+			rate:16000,
+			asrptt:1,
+		},function(ret,err){
+			if(ret.status){
+				readWord = ret.wordStr;
+			    //api.alert({msg:ret.wordStr});
+			} else {
+			    api.alert({msg:err.msg});
+			}
+		});
+	}
+	function speechRecognizerCancelRecord(){
+		speechRecognizer.cancelRecord();
+		speechRecognizer.hideRecordHUD();
+		speechRecognizer.read({
+		    readStr: readWord,
+		    speed: 60,
+		    volume: 60,
+		    voice: 1,
+		    rate: 16000,
+		},function(ret,err) {
+		    if(ret.status) {
+		        ret.speakProgress;
+		    } else {
+		        api.alert({msg:err.msg});
+		    }
+		});
+	}
+	function speechRead(){
+		speechRecognizer.read({
+		    readStr: readWord,
+		    speed: 60,
+		    volume: 60,
+		    voice: 1,
+		    rate: 16000,
+		},function(ret,err) {
+		    if(ret.status) {
+		        ret.speakProgress;
+		    } else {
+		        api.alert({msg:err.msg});
+		    }
+		});
+	}
+	function speechReadStop(){
+		speechRecognizer.stopRead();
+	}
+
+	function smsVerifyLogin(){
+		smsVerify.register(function(ret, err){
+		    if(ret.status){
+		        api.alert({msg: '注册成功'});
+		    }else{
+		        api.alert({msg: err.code+' 注册失败'});
+		    }
+		});
+	}
+	function smsVerifySend(){
+		var tel = document.getElementById("tel").value;
+		smsVerify.sms({
+		    phone:tel,
+		    country:"86"
+		},function(ret, err){
+		    if(ret.status){
+		    	maxtime = 60;
+	 			timer1 = setInterval("smsVerifyTime();", 1000);
+		        if( ret.smart == true ){    // 安卓版特有功能 智能验证
+		            api.alert({msg: '智能验证成功：开发者可以在这里直接执行手机号验证成功之后的相关操作'});
+		        }else{
+		            api.alert({msg: '短信发送成功'});
+		        }
+		    }else{
+		        api.alert({msg: err.code+' '+err.msg});
+		    }
+		});
+	}
+	function smsVerifyVoiceSend(){
+		var tel = document.getElementById("tel").value;
+		smsVerify.voice({
+		    phone:tel,
+		    country:"86"
+		},function(ret, err){
+		    if(ret.status){
+		    	maxtime = 60;
+	 			timer1 = setInterval("voiceVerifyTime();", 1000);
+		        api.alert({msg: '语音发送成功'});
+		    }else{
+		        api.alert({msg: err.code+' '+err.msg});
+		    }
+		});
+	}
+	function smsVerifyVerify(){
+		var mycode = document.getElementById("code").value;
+		var tel = document.getElementById("tel").value;
+		smsVerify.verify({
+		    phone:tel,
+		    country:"86",
+		    code:mycode
+		},function(ret, err){
+		    if(ret.status){
+		        api.alert({msg: '验证成功'});
+		    }else{
+		        api.alert({msg: err.code+' '+err.msg});
+		    }
+		});
+	}
+	function smsVerifyTime(){
+	    if(maxtime == 0){
+	    	clearInterval(timer1);
+	        $(".smsVerify_btn").val("重发短信验证");
+	    }else{
+	    	maxtime--;
+	    	$(".smsVerify_btn").val(maxtime+"秒后可重发");
+	    }
+	}
+	function voiceVerifyTime(){
+	    if(maxtime == 0){
+	    	clearInterval(timer1);
+	        $(".voiceVerify_btn").val("重发语音验证");
+	    }else{
+	    	maxtime--;
+	    	$(".voiceVerify_btn").val(maxtime+"秒后可重发");
+	    }
+	}
+	
+	function openScanner(){
+		api.confirm({
+		    title: '消息提示',
+		    msg: '是否开启二维码扫描',
+		    buttons: ['打开', '取消']
+		}, function(ret, err){
+		    if( ret.buttonIndex == 1 ){
+		         var scanner = api.require('scanner');
+		         scanner.open();
+		    }else{
+		         alert( 'do nothing' );
+		    }
+		});
+	}
+</script>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+        html,body{
+            height: 100%;
+        }
+        #wrap{
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+                   flex-flow: column;
+        }
+        #header{
+            text-align: center; background-color: #81a9c3; color: #fff;
+            width: 100%;
+        }
+        #header h1{
+            font-size: 20px; height: 44px; line-height: 44px; margin: 0em; color: #fff;
+        }
+        #main{
+            -webkit-box-flex: 1; 
+            -webkit-flex: 1;
+            flex: 1;
+        }
+        #footer{
+            height: 30px; line-height: 30px;
+            background-color: #81a9c3; 
+            width: 100%;
+            text-align: center;
+        }
+        #footer h5{
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <h1>TEST</h1>
+        </div>
+        <div id="main">
+                
+        </div>
+        <div id="footer" onclick="share();">
+            <h5>分享测试</h5>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+    function share(){
+        api.actionSheet({           //底部弹出框
+            title: '分享到',
+            cancelTitle: '取消',
+            destructiveTitle: '微信朋友圈',
+            buttons: ['微信好友','微博','QQ空间']
+        }, function(ret, err){
+            if( ret.buttonIndex == 1 || ret.buttonIndex == 2 ){
+                 api.openWidget({
+                    id : 'A6911043264607' ,
+                    wgtParam : {title:'APICloud' , content:'www.apicloud.com'},
+                    animate:{
+                        type:'movein',
+                        subType:'from_bottom',
+                        duration:500
+                    }
+                 },function(ret,err){
+                    if(ret){
+                        alert(JSON.stringify( ret ));  //关闭子widget时的返回值
+                    }
+                 });
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+    }
+
+    apiready = function(){
+        var WelcomePage = api.require('welcomePage');    
+        WelcomePage.openWelcomePage({
+            isFullscreen: true,  //是否全屏(全屏不显示状态栏)  默认false
+            AnimationType: 'ZoomOutPage',  //动画类型   'Default默认', 'DepthPage深入浅出', 'Cube立方体', 'Rotate旋转','Accordion左右折叠', 'InRightUp右上角进入' , 'InRightDown右下角进入', 'ZoomOutPage淡入淡出'
+            imgs: ['widget://image/girl1.jpg','widget://image/gogd.jpg','widget://image/cat.jpg'],
+            setting: {
+                isShow: true, // 是否显示页面点 默认不显示
+                SelectedImg: 'widget://image/green.png',
+                NotSelectedImg: 'widget://image/yellow.png',
+                ImgSize: 30, // 图片size
+                ImgSpacing: 30 // 图片之间的间隔
+            }
+        }, function(ret, err){        
+            if( ret ){
+                alert( JSON.stringify( ret ) );
+            }else{
+                alert( JSON.stringify( err ) );
+            }
+        });
+        api.addEventListener({       //监听进入后台操作
+            name: 'pause'
+        }, function(ret, err){
+           $api.html(header,'<h1>进入后台</h1>');
+           $api.css($api.byId('main'), 'background-color:#f00');
+        });
+        api.addEventListener({        //监听返回前台操作
+            name: 'resume'
+        }, function(ret, err){
+           $api.html(header,'<h1>进入前台</h1>');
+           $api.css($api.byId('main'), 'background-color:#fff');
+        });
+
+        $api.toast('演示','延时提示框',1000);
+        var header = document.querySelector('#header');
+        $api.fixStatusBar(header);
+        api.setStatusBarStyle({
+            style: 'light'
+        });
+
+        var headerPos = $api.offset(header);
+        var main = $api.byId('main');
+        var mainPos = $api.offset(main);
+
+        api.openFrame({
+            name: 'main',
+            url: 'html/main.html',
+            bounces: false,
+            rect: {
+                x: 0,
+                y: headerPos.h,
+                w: headerPos.w,
+                h: mainPos.h
+            }
+        });
+    };
+</script>
+</html>

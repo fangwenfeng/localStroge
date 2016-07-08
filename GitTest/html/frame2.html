@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>开发</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+        span {
+            padding: 5px 15px;
+            margin: 10px;
+            display: inline-block;
+            background-color: #e8e8e8;
+        }
+        input{
+            border-radius: 6px;
+            background-color: #FFFFFF;
+            height: 36px;
+            border: 1px solid #D2CCCE;
+            color: #D2CCCE;
+            line-height: 36px;
+            text-indent: 7px;
+            width:160px;
+            background-clip:padding-box;
+        }
+    </style>
+</head>
+<body>
+    model对象：
+    <span tapmode onclick="insert_Test();">insert</span>
+    <span tapmode onclick="uploadFile_Test();">uploadFile</span><br>
+    query对象：
+    <span tapmode onclick="createQuery_Test();">按条件查询</span><br>
+    user对象：<br>
+    <input type="text" name="userName" id="userName" placeholder="请输入注册名" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/><br>
+    <input type="password" name="userPassword" id="userPassword" placeholder="请输入密码" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/><br>
+    <input type="number" name="userAge" id="userAge" placeholder="请输入年龄" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+    <span tapmode onclick="register_Test();">注册用户</span><br>
+    <input type="text" name="loginName" id="loginName" placeholder="登录名" /><br>
+    <input type="password" name="loginPassword" id="loginPassword" placeholder="请输入密码"/>
+    <span tapmode onclick="login_Test();">登录</span><br>
+    <input type="password" name="updatePassword" id="updatePassword" placeholder="更改密码" />
+    <span tapmode onclick="updatePassword_Test();">更改密码</span><br>
+    <span tapmode onclick="logout_Test();">退出登录</span><br>
+    <span tapmode onclick="toast_Test();">延时提示框</span>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/SHA1.js "></script>
+<script>
+   var model;
+   var query; 
+   var user;
+	apiready = function() {
+        model = api.require('model');
+        query = api.require('query');
+        user = api.require('user');
+        model.config({
+            appKey: 'BEEF73BF-4B9C-B848-9D7F-C188E2F70D6F',
+            host: ''
+        });
+	};    
+    function toast_Test(){
+        $api.toast('演示','延时提示框',3000);
+    }
+    function register_Test(){
+        var userName = document.getElementById('userName').value;
+        var userPassword = document.getElementById('userPassword').value;
+        var userAge = document.getElementById('userAge').value;
+        if(userName == "" || userPassword == "" || userAge == "" ||userName == null || userPassword == null || userAge == null){
+            alert("注册信息不能为空！");
+        }else{
+            user.register({
+                username: userName,
+                password: userPassword,
+                age : userAge
+            }, function( ret, err ) {
+                if( ret ){
+                    alert( JSON.stringify( ret) );
+                }else{
+                    alert( JSON.stringify( err) );
+                }
+            });
+        }        
+    }
+    function login_Test(){
+        var loginName = document.getElementById('loginName').value;
+        var loginPassword = document.getElementById('loginPassword').value;
+        user.login({
+            username: loginName,
+            password: loginPassword
+        }, function( ret, err ) {
+             if( ret ){
+                alert("登录成功！");
+             }else{
+                alert("登录失败！");
+             }
+        });
+    }
+    function updatePassword_Test(){
+        var updatePassword = document.getElementById('updatePassword').value;
+        user.updatePassword({
+            password: updatePassword
+        }, function(ret, err) {
+            if( ret ){
+                alert("修改密码成功！");
+            }else{
+                alert("修改密码失败！");
+            }
+        });
+    }
+    function logout_Test(){
+        user.logout(function(ret, err){
+            if( ret ){
+                alert("退出登录成功！");
+            }else{
+                alert("退出登录失败！");
+            }
+        });
+    }
+    function createQuery_Test(){
+        query.createQuery(function( ret, err ){
+            if( ret && ret.qid){
+                query.asc({     //asc正序，desc倒叙排列
+                    qid: ret.qid,  
+                    column: 'id'
+                }); 
+                query.whereEqual({
+                    qid:ret.qid,
+                    column:'username',
+                    value:'李四'
+                });
+                model.findAll({
+                    class: "user",
+                    qid: ret.qid
+                }, function( ret, err ) {
+                    if( ret ){
+                         alert( JSON.stringify( ret ) );   
+                    }else{
+                         alert( JSON.stringify( err ) );
+                    }
+                });
+                //alert( JSON.stringify( ret ) );
+            }else{
+                alert( JSON.stringify( err ) );
+            }
+        });
+    }
+    function uploadFile_Test(){
+        model.uploadFile({
+            report: false,
+            data: {
+                file: {
+                    name: 'girl.png',
+                    url: 'widget://res/girl.png'
+                },
+                values: {
+                    key1: 'value1',
+                    key2: 'value2'
+                }
+            }
+        }, function(ret, err){
+            if( ret ){
+                 alert( JSON.stringify( ret ) );   
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+    }
+    function insert_Test(){
+        model.insert({
+            class: 'user',
+            value: {
+                 username : '王五',
+                 password : '456789',
+                 age : '25'
+            }
+        }, function(ret, err){
+            if( ret ){
+                 alert( JSON.stringify( ret ) );
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+    }
+    
+</script>
+</html>

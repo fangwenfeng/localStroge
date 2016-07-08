@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<style>
+		html,body{
+            height: 100%;
+        }
+        #wrap{
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+                   flex-flow: column;
+        }
+         #header{
+            text-align: center; background-color: #81a9c3; color: #fff;
+            width: 100%;height: 30px;
+        }
+   
+        #main{
+            -webkit-box-flex: 1; 
+            -webkit-flex: 1;
+            flex: 1;
+        }
+        #footer{
+            height: 30px; line-height: 30px;
+            background-color: #81a9c3; 
+            width: 100%;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+        }
+        #footer h5{
+            color: white;
+        }
+	</style>
+</head>
+<body>
+	<div id="wrap">
+        <div id="header">
+           
+        </div>
+        <div id="main">
+                
+        </div>
+        <div id="footer">
+            <h5>尾部</h5>
+        </div>
+    </div>
+   
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		var headerPos = $api.offset(header);
+		var footerPos = $api.offset(footer);
+        var main = $api.byId('main');
+        var mainPos = $api.offset(main);
+
+		var listView = api.require('UIListView');
+		var pullLoadingImgae = 'widget://image/pullRefresh.png';     
+		//刷新的小箭头，不可为空
+		var bgColor = '#F5F5F5';                                  
+		//下拉刷新的背景颜色 ，有默认值，可为空
+		var textColor= '#8E8E8E';                                 
+		//提示语颜色，有默认值，可为空
+		var textDown= '下拉可以刷新...';                             
+		//尚未触发刷新时间的提示语，有默认值，可为空
+		var textUp= '松开开始刷新...';                               
+		//触发刷新事件的提示语，有默认值，可为空
+		var showTime= true;                                       
+		//是否显示时间，有默认值，可为空
+		listView.open({	
+			rect:{	
+				x: 0,
+	            y: headerPos.h,
+	            w: headerPos.w,
+	            h: mainPos.h-footerPos.h
+            },
+		    rightBtns:[{
+		    	bgColor:'#52C09B',title:'删除',activeBgColor: '#DE5C25'
+		    	},{
+		    	bgColor:'#E76A64',title:'确定',activeBgColor: '#DE5C25'
+		    }],
+		    styles:{
+		    	borderColor:'#DBDBDB', //列表分割颜色
+		    	item:{
+		    		bgColor:'#fff',   //列表项背景颜色
+		    		activeBgColor: '#F5F5F5',
+		    	}
+		    },		    
+		    placeholderImg: 'widget://image/pullRefresh.png',
+		    fixed :false,
+		    data:[
+		    	{ imgPath:'http://img1.3lian.com/gif/more/11/201206/a5194ba8c27b17def4a7c5495aba5e32.jpg',title:'标题',subTitle:'子标题，说明文字。',subTitleColor:'#f00'},
+		    	{ title:'标题',subTitle:'子标题',remark: '备注'}
+		    ]
+		}, function(ret, err){   		    
+	    	var indexId = ret.index;
+	    	if( ret.btnIndex == 0  ){
+	    	 	listView.deleteItem({
+				    index: indexId
+				});
+	    	}else{
+		        alert( JSON.stringify( ret ) );
+		    }		    
+		});
+
+		listView.setRefreshHeader({
+		    loadingImg : pullLoadingImgae,
+		    bgColor:bgColor,
+		    textColor:textColor,
+		    textDown:textDown,
+		    textUp:textUp,
+		    showTime : showTime
+		}, function(ret, err){        
+		    if( ret ){
+		        listView.appendData({
+				     data:[{
+				     	title:'标题1',
+				     	subTitle:'子标题，说明文字',
+				     	rightBtns:[{
+					    	bgColor:'#52C09B',title:'删除',activeBgColor: '#DE5C25'
+					    	},{
+					    	bgColor:'#E76A64',title:'确定',activeBgColor: '#DE5C25'
+					    }]
+				     },{
+				     	title:'标题2',
+				     	subTitle:'子标题',
+				     	rightBtns:[{
+					    	bgColor:'#52C09B',title:'删除',activeBgColor: '#DE5C25'
+					    	},{
+					    	bgColor:'#E76A64',title:'确定',activeBgColor: '#DE5C25'
+					    }]
+				     }]
+				});
+		    }else{
+		        alert( JSON.stringify( err ) );
+		    }
+		});
+   
+		listView.setRefreshFooter({
+		    loadingImg:'widget://image/downRefresh.png',
+		    bgColor:'#F5F5F5',
+		    textColor:'#8E8E8E',
+		    textDown:'上拉可加载更多...',
+		    textUp:'松开开始加载...',
+		    showTime:true
+		}, function(ret, err){        
+		    if( ret ){
+		        listView.appendData({
+				     data:[{
+				     	title:'标题5',
+				     	subTitle:'子标题，说明文字',
+				     	rightBtns:[{
+					    	bgColor:'#52C09B',title:'删除',activeBgColor: '#DE5C25'
+					    	},{
+					    	bgColor:'#E76A64',title:'确定',activeBgColor: '#DE5C25'
+					    }]
+				     },{
+				     	title:'标题6',
+				     	subTitle:'子标题',
+				     	rightBtns:[{
+					    	bgColor:'#52C09B',title:'删除',activeBgColor: '#DE5C25'
+					    	},{
+					    	bgColor:'#E76A64',title:'确定',activeBgColor: '#DE5C25'
+					    }]
+				     }]
+				});
+		    }else{
+		        alert( JSON.stringify( err ) );
+		    }
+		});
+
+    };
+</script>
+</html>

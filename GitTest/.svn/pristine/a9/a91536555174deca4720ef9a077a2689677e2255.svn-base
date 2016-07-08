@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>  
+        .divCss{
+            height: 50px;
+            line-height: 50px;
+            color: #000;
+            font-size:16px;
+            text-align: center;
+            border-bottom: 1px solid #444;
+        }
+        span {
+            margin: 3px 5px;
+            display: inline-block;
+        }
+</style>
+</head>
+<body>	
+    <div class="divCss" onclick="pullShow();">底部弹出slidingList</div>
+    <div class="divCss" onclick="citySelector_test();">citySelector</div>
+    <div class="divCss">
+        <span tapmode onclick="UICityListOpen()">UICityListOpen</span>
+        <span tapmode onclick="UICityListClose()">UICityListClose</span>
+    </div>
+    <div class="divCss">
+        <span tapmode onclick="UIMultiSelectorOpen()">UIMultiSelectorOpen</span>
+        <span tapmode onclick="UIMultiSelectorClose()">UIMultiSelectorClose </span>
+    </div>
+    <div class="divCss">
+        <span tapmode onclick="periodSelector_test()">时段选择器</span>
+        <span tapmode onclick="setPeriodSelector()">设置</span>
+        <span tapmode onclick="periodSelectorClose()">关闭</span>
+    </div>
+    <div class="divCss">
+        <span tapmode onclick="timeSelector_test()">时间选择器</span>
+        <span tapmode onclick="setTimeSelector()">设置</span>
+        <span tapmode onclick="timeSelectorClose()">关闭</span>
+    </div>
+    <div class="divCss">
+        <span tapmode onclick="UISlider_test()">滑动选择器</span>
+        <span tapmode onclick="UISliderrClose()">关闭</span>
+    </div>
+    <div class="divCss">
+        <span tapmode onclick="UISelector_test()">自定义分级联动选择器</span>
+        <span tapmode onclick="setUISelector()">设置</span>
+        <span tapmode onclick="UISelectorClose()">关闭</span>
+    </div>
+    <div class="divCss">
+        <span tapmode onclick="UIActionSelector_test()">多级选择器</span>
+        <span tapmode onclick="UIActionSelectorClose()">关闭</span>
+    </div> 
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var UICityList;
+    var UIMultiSelector;
+    var periodSelector;
+    var timeSelector;
+    var uislide;
+    var UISelector;
+    var UIActionSelector; //可替代 citySelector 模块来自定义城市选择器
+    apiready = function() {
+        UICityList = api.require('UICityList');
+        UIMultiSelector = api.require('UIMultiSelector');
+        periodSelector = api.require('periodSelector');
+        timeSelector = api.require('timeSelector');
+        uislider = api.require('UISlider');
+        UISelector = api.require('UISelector');
+        UIActionSelector = api.require('UIActionSelector');
+    };
+    function UIActionSelector_test(){
+        UIActionSelector.open({
+            datas: [                                
+            {
+                name: '北京市',               
+                sub: [                      
+                    {
+                        name: '东城区'       
+                    },{
+                        name: '西城区'       
+                    }
+                ]
+            }, {
+                name: '河南省',            
+                sub: [                     
+                    {
+                        name: '郑州市',     
+                        sub: [              
+                            {
+                                name: '中原区' 
+                            },{
+                                name: '金水区' 
+                            }
+                        ]
+                    },{
+                        name: '驻马店市',   
+                        sub: [             
+                            {
+                                name: '西平县' 
+                            },{
+                                name: '泌阳县' 
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+            layout: {
+                row: 5, 
+                col: 3,
+                height: 30, 
+                size: 12,
+                sizeActive: 14,
+                rowSpacing: 5,
+                colSpacing: 10,
+                maskBg: 'rgba(0,0,0,0.2)',
+                bg: '#fff',
+                color: '#888',
+                colorActive: '#f00', 
+                colorSelected: '#f00'
+            },
+            animation: true,
+            cancel: {
+                text: '取消', 
+                size: 12,
+                w: 90,  
+                h: 35,
+                bg: '#fff',
+                bgActive: '#ccc',
+                color: '#888',
+                colorActive: '#fff'
+            },
+            ok: {
+                text: '确定',
+                size: 12,
+                w: 90,
+                h: 35,
+                bg: '#fff',
+                bgActive: '#ccc',
+                color: '#888',
+                colorActive: '#fff'
+            },
+            title: {
+                text: '请选择',
+                size: 12,
+                h: 44,
+                bg: '#eee',
+                color: '#888'
+            },
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                alert(JSON.stringify(ret));
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+    function UIActionSelectorClose(){
+        UIActionSelector.close();
+    }
+    function UISelector_test(){
+        UISelector.open({
+            rect: {
+                y: 100 ,
+                h: 340
+            },
+            styles:{
+              bg: 'rgba(0,0,0,0)',   
+              text: {                  
+                 size: 14,             
+                 selected: '#fff',     
+                 normal: '#000'        
+             },
+             item: {                   
+                w: 80,                
+                h: 45,                
+                normal: '#87ceeb',    
+                selected: '#218868',  
+                zoomIn: 1.2        
+            }
+        },
+        rows: 5,
+        indexs: [1,2,3],
+        bounce: false,
+        fixedOn: api.frameName,
+        fixed: false,
+        data: [{
+            title: 'A',
+            contents: [{
+                title: 'a',
+                contents: ['1', '2', '3', '4', '5']
+            }]
+        }, {
+            title: 'B',
+            contents: ['a', 'b', 'c', 'd']
+        }, {
+            title: 'C',
+            contents: ['1a', '2b', '3c']
+        }, {
+            title: 'D',
+            contents: ['一', '二', '三']
+        }]
+    },function( ret, err){
+        if( ret ){
+            alert(JSON.stringify(ret));
+        }else{
+            alert(JSON.stringify(err));
+        }
+    });
+    }
+    function setUISelector(){
+        UISelector.set({
+            indexs:[1,3]
+        });
+    }
+    function UISelectorClose(){
+        UISelector.close();
+    }
+    function UISlider_test(){
+        uislider.open({
+            animation: true,
+            orientation: 'horizontal', 
+            rect: {
+                x:30,
+                y: api.frameHeight / 1.3,
+                size: 300   //orientation 或vertical的宽度或高度
+            },
+            bubble: {
+                direction: 'top',
+                state: 'always',
+                w: 80,
+                h: 30,
+                size: 14,
+                color: '#888',
+                //bg: 'widget://image/duigou.png',   //气泡的背景图片路径
+                //prefix: '温度：',
+                suffix: '°C'
+            },
+            handler: {
+                w: 10,
+                h: 8,
+                bg: 'widget://image/green.png' //滑块图片的路径
+            },
+            bar: {
+                h: 4,
+                bg: 'widget://image/blue.png', //滑动条的背景
+                active: 'widget://image/yellow.png' 
+                //滑动条滑块已选择区域背景
+            },
+            value: {
+                min: 16,
+                max: 48,
+                step: 0.5,
+                init: 26
+            },
+            fixedOn: api.frameName,
+            fixed: false
+        }, function(ret, err) {
+            if (ret) {
+
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+    function UISliderrClose(){
+        uislider.close({
+         id: 1
+     });
+    }
+    function timeSelector_test(){
+        timeSelector.open({
+            y: api.frameHeight / 1.5 ,
+            height: 260,
+            fixedOn: api.frameName
+        }, function(ret, err){
+            if( ret ){
+
+            }else{
+               alert( JSON.stringify( err ) );
+           }
+       });
+    }
+    function setTimeSelector(){
+        timeSelector.set({
+            hour: 20,
+            minute: 25
+        });
+    }
+    function timeSelectorClose(){
+        timeSelector.close();
+    }
+    function periodSelector_test(){
+        periodSelector.open({
+            y: api.frameHeight / 2 ,
+            h: 340,
+            fixed:false,
+            fixedOn: api.frameName
+        }, function(ret, err){
+            if( ret ){
+
+            }else{
+               alert( JSON.stringify( err ) );
+           }
+       });
+    }
+    function setPeriodSelector(){
+        periodSelector.set({
+            lHour:'12',
+            lMinute:'23',
+            rHour:'18',
+            rMinute:'30'
+        });
+    }
+    function periodSelectorClose(){
+        periodSelector.close();
+    }
+
+    function UIMultiSelectorOpen() {
+        UIMultiSelector.open({
+            rect : {
+                h : api.winHeight / 2 
+            },
+            text : {
+                title : 'UIMultiSelector', 
+                leftBtn : 'Cancel', 
+                rightBtn : 'Finish', 
+                selectAll : 'ALL' 
+            },
+            max : 5, 
+            styles : {                    
+                mask : 'rgba(0,0,0,.6)',  //遮罩层的背景
+                title : {
+                    bg : '#ccc', 
+                    color : '#000', 
+                    size : 16, 
+                    h : 44 
+                },
+                leftButton : {
+                    bg : 'widget://image/tb.png', 
+                    w : 80, 
+                    h : 35, 
+                    marginT : 5, 
+                    marginL : 8, 
+                    color : 'rgb(0,0,0)', 
+                    size : 14,    
+                },
+                rightButton : {
+                    bg : 'widget://image/tb.png',
+                    w : 80, 
+                    h : 35, 
+                    marginT : 5, 
+                    marginR : 8, 
+                    color : 'rgb(0,0,0)', 
+                    size : 14,                 
+                },
+                item : {
+                    h : 35, 
+                    bg : '#90EE90', 
+                    bgActive : '#1E90FF', 
+                    bgHighlight : 'rgb(238,17,150)', 
+                    color : '#000', 
+                    active : '#FF7F24',  //已选中选项的文字颜色
+                    highlight : 'rgb(255,255,0)', 
+                    size : 14, 
+                    lineColor : 'rgb(78,57,255)', 
+                    textAlign : 'center',      
+                },
+                icon : {
+                    w : 20, 
+                    h : 20, 
+                    marginT : 11, 
+                    marginH : 8, 
+                    bg : '#fff', 
+                    bgActive : 'widget://image/dg.png', 
+                    bgHighlight : 'widget://image/duigou.png',
+                    align : 'left',    
+                }
+            },
+            animation : true,
+            items : [{
+                text : 'Monday', 
+                status : 'normal',     
+            }, {
+                text : 'Tuesday', 
+                status : 'normal',  
+            }, {
+                text : 'Wednesday', 
+                status : 'normal',   
+            }, {
+                text : 'Thursday', 
+                status : 'normal', 
+            }, {
+                text : 'Friday', 
+                status : 'normal',   
+            }, {
+                text : 'Saturday', 
+                status : 'normal',     
+            }, {
+                text : 'Sunday', 
+                status : 'normal',  
+            }, {
+                text : 'from Monday to Sunday',
+                status : 'normal', 
+            }]
+        }, function(ret, err) {
+            if ( ret.eventType === 'clickRight' || ret.eventType === 'clickLeft' ) {
+                UIMultiSelectorClose();
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    };
+    function UIMultiSelectorClose() {
+        UIMultiSelector.close();
+    };
+
+    function UICityListClose() {
+        UICityList.close();
+    }
+    function UICityListOpen() {
+        alert( JSON.stringify( {
+            x : 15,
+            y : api.winHeight / 3 + 7,
+            w : api.winWidth - 30,
+            h : api.winHeight  - 10                
+        } ))
+        UICityList.open({
+            rect : {
+                y : api.winHeight / 3 + 7,
+                h : api.winHeight  - api.winHeight / 3 - 37
+            },
+            resource : 'widget://res/UICityList.json',
+            styles : {
+                searchBar : {
+                    bgColor : '#ccc',
+                    cancelColor : '#E3E3E3'
+                },
+                location : {
+                    color : '#7AC5CD',
+                    size: 12 
+                },
+                sectionTitle : {
+                    bgColor : '#fff',
+                    size: 15 
+                },
+                item : {
+                    bgColor: '#fff',           
+                    activeBgColor: '#f00',   
+                    color: '#000'
+                },
+                indicator : {
+                    bgColor : '#fff',
+                }
+            },
+            currentCity : '北京',
+        }, function(ret, err) {
+            if (ret) {
+                alert(JSON.stringify(ret));
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+    function citySelector_test(){
+        var citySelector = api.require('citySelector');
+        citySelector.open({
+            y: api.frameHeight / 1.6,
+            fontColor:'#000',
+            selectedColor:'#f00',
+            fixedOn: api.frameName,
+            anim:true
+        }, function(ret, err){        
+            if( ret ){
+                alert( JSON.stringify( ret ) );
+            }else{
+                alert( JSON.stringify( err ) );
+            }
+        });
+    }
+    function pullShow(){
+    	var slidingList = api.require('slidingList');
+    	slidingList.showList({
+          rightbtn : '确定', 
+          leftbtn : '取消',
+          item_height : '70',
+          item_num:'3',
+          data : [{ content:'标题1',color:'#f00'},{content:'标题2'},{content:'标题3'}]
+      }, function(ret, err){        
+          if( ret ){
+              alert( JSON.stringify( ret ) );
+          }else{
+              alert( JSON.stringify( err ) );
+          }
+      });
+    }
+</script>
+</html>
